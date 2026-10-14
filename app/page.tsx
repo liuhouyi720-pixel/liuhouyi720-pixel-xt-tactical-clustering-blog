@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ThreatExplorer from "./components/ThreatExplorer";
 
 export default function HomePage() {
   return (
@@ -67,11 +68,15 @@ export default function HomePage() {
                 <div><strong>Moving contribution</strong><small>Share of moves × weighted value of their destinations</small></div>
               </div>
               <p>The research uses <strong>one shared xT map estimated from the pooled data</strong>. Every team's actions are valued against that same reference.</p>
+              <ThreatExplorer />
+              <details>
+                <summary>View the original global xT value map</summary>
               <figure className="figure">
                 <div className="figure-heading"><span>FIG. 01</span><strong>The shared location-value map</strong><a href="/assets/global-xt.png" target="_blank" rel="noreferrer">Full-size figure ↗</a></div>
                 <Image src="/assets/global-xt.png" width="1600" height="960" alt="Global xT map with 16 columns and 12 rows. Teams attack to the right. The highest values are centrally near the right-hand goal, with local variation elsewhere." priority />
                 <figcaption>Original notebook output. Attack runs left to right. Axes show zone indices; color shows <strong>the value of possessing the ball in a zone</strong>. Source: the project's global xT model.</figcaption>
               </figure>
+              </details>
               <aside className="margin-note"><strong>A modelling assumption matters here.</strong> This implementation counts shots and successful passes and carries; unsuccessful moves are omitted. Its values belong to that simplified model and should not be read as observed scoring rates across all real possessions. Local values also need not rise steadily with proximity to goal.</aside>
             </section>
       

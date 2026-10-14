@@ -37,3 +37,48 @@ five set-piece pass types from notebook 06. Populated rows sum to 1; origins wit
 no moves stay all-zero and are listed in the report. Count mismatches with the
 reference stop matrix export so incompatible samples are not silently combined.
 The script does not update the frontend, recompute clustering, or change saved xT.
+
+## Interactive xT explanation
+
+The article's "Valuing space" section contains an interactive pitch at
+`/#threat-explorer`. The default view uses a high-contrast green scale for the
+original research xT. Hover or tap to inspect a zone; the shared value map remains
+fixed. Compare it with "Within 5 actions (illustration)" on the same absolute,
+linear 0–0.30 scale. The five-action view does not replace the research values.
+The pitch explicitly marks attacks left-to-right, own goal, and opponent goal.
+
+"Move destinations" preserves the original hover/pin interaction. Its colors
+show movement probabilities, including backward and same-zone moves, on a fixed
+0–60% square-root scale. Click/tap to pin a start, then inspect destinations.
+Unpin or press Escape to resume exploring. Arrow keys navigate the pitch.
+
+Run `python prepare_interactive_data.py` to package the verified matrix and zone
+CSV into `public/assets/xt-interactive.json` (schema version 2). It verifies input
+hashes, computes five-action values starting from zero, and reproduces the saved
+100-step research values within 1e-10. No raw events or clustering are rerun;
+original research CSVs remain unchanged. The JSON ships with the website.
+
+Both values use V[n+1] = shot_probability * goal_probability +
+move_probability * T * V[n], with V[0] = 0. The original model excludes failed
+moves, so its long horizon retains high defensive values. The defensive five
+columns average 0.10939292 in the saved model versus 0.00028084 at five actions.
+More iterations alone do not remove this effect. Including turnovers would
+require changing and rerunning model estimation, then reassessing downstream
+research. The saved model reached its 100-step cap before the notebook's 1e-6
+convergence threshold (last change about 8.35e-5).
+
+Direction audit: an evenly spaced sample of 50 matches from the saved match list
+contained 1,279 shots, all in the right half (mean x=103.99 on a 120-unit pitch).
+All 209 team/period groups had mean shot x above 60. This supports the existing
+attacking-right convention; no coordinate reversal is applied. Grid y=0 stays at
+the bottom to match notebook figures.
+
+The sidebar shows the selected xT comparison and simplified xG (goals/shots).
+Zones without shots display "No shot sample". The original static map remains
+available below the interactive figure.
+
+Browser verification: with a local server on port 3012, run
+`node scripts/verify-interactive.cjs` using an installed Playwright package and
+Microsoft Edge. `PLAYWRIGHT_MODULE` can point to a shared Playwright installation;
+`TEST_URL` can override the server URL. Checks cover every matrix row, sidebar
+values, hover, pinning, keyboard, touch, error recovery, and responsive layout.

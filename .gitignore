@@ -19,3 +19,5 @@ Thumbs.db
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
+/.local-checks
+__pycache__/
